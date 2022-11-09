@@ -1,0 +1,33 @@
+---
+name: verify
+
+on:
+  push:
+    branches:
+    - '*'
+    tags:
+    - '*'
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  brew-fiddle:
+    strategy:
+      fail-fast: false
+      matrix:
+        runner:
+        - {os: 'macos', ver: '11'}
+
+    runs-on: ${{ matrix.runner.os }}-${{ matrix.runner.ver }}
+
+    steps:
+    - name: Install stuff
+      run: |
+        #        brew update
+        #        brew upgrade
+        clang-format --version && echo "Installed" || brew install clang-format
+        git --version && echo "Installed" || brew install git
+        python3 --version && echo "Installed" || brew install python3
+        meson --version && echo "Installed" || brew install meson
